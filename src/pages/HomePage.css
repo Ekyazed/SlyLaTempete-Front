@@ -1,0 +1,31 @@
+.home-page {
+    min-height: calc(100vh - 128px); /* Adjust to account for navbar and footer height */
+  }
+  
+  .btn {
+    display: inline-block;
+    padding: 1rem 2rem;
+    border-radius: 0.5rem;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+  }
+  
+  .btn-primary {
+    background: linear-gradient(to right, #6366f1, #3b82f6);
+    color: white;
+  }
+  
+  .btn-primary:hover {
+    background: linear-gradient(to right, #4f46e5, #2563eb);
+  }
+  
+  .btn-secondary {
+    background: white;
+    color: #3b82f6;
+    border: 2px solid #3b82f6;
+  }
+  
+  .btn-secondary:hover {
+    background: #3b82f6;
+    color: white;
+  }

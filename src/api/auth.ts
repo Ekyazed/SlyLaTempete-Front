@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'http://backend.library.localhost'; // Replace with your actual API URL
+const API_URL = 'https://backend.librairie.slylatempete.fr'; // Replace with your actual API URL
 
 interface LoginCredentials {
   email: string;

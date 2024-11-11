@@ -1,27 +1,15 @@
-# Dockerfile for React + TypeScript + Redux + Tailwind CSS Project
-
-# Step 1: Base Image
-FROM node:20.16.0
-
-# Step 2: Set Working Directory
+# Step 1: Build the React app with Vite
+FROM node:20.16.0 AS build
 WORKDIR /usr/src/app
-
-# Step 3: Copy Package Files
 COPY package*.json ./
-
-# Step 4: Install Dependencies
 RUN npm install
-
-# Step 5: Copy Application Code
 COPY . .
-
-# Step 6: Build Application
 RUN npm run build
 
-# Step 7: Expose Port
-EXPOSE 3000
-
-# Step 8: Run Application
-# Serve the build directory instead of starting the development server
+# Step 2: Serve the build using 'serve'
+FROM node:20.16.0
+WORKDIR /usr/src/app
+COPY --from=build /usr/src/app/dist ./dist
 RUN npm install -g serve
-CMD ["serve", "-s", "dist", "-l", "3000"]
+EXPOSE 80
+CMD ["serve", "-s", "dist", "-l", "80"]

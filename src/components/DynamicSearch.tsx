@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../redux/store';
 import { deleteBookSuccess, toggleBookReadUpdateStatus } from '../redux/slices/bookSlice';
 import { setTotalBooks, setBooksRead } from '../redux/slices/statSlice';
+import { useNavigate } from 'react-router-dom';
 
 const DynamicSearch: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -14,6 +15,7 @@ const DynamicSearch: React.FC = () => {
   const [searchInput, setSearchInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [searchResults, setSearchResults] = useState<Book[]>([]); // Ensure searchResults is always an array
+  const navigate = useNavigate();
 
   const handleSearch = async () => {
     setIsLoading(true);
@@ -65,6 +67,11 @@ const DynamicSearch: React.FC = () => {
     setSearchInput('');
   };
   
+  const handleEdit = (bookId: number) => {
+    if (bookId) {
+      navigate(`/edit-book/${bookId}`);
+    }
+  };
 
   return (
     <div className="bg-white p-6 rounded-lg shadow-md mb-8">
@@ -138,6 +145,12 @@ const DynamicSearch: React.FC = () => {
                     >
                       {book.is_read ? 'Read' : 'Mark as Read'}
                     </button>
+                    <button
+                    onClick={() => handleEdit(book.id)}
+                    className="mr-2 bg-blue-600 text-white px-2 py-1 rounded-md hover:bg-blue-500"
+                  >
+                    Edit
+                  </button>
                     <button
                       onClick={() => handleDelete(book.id)}
                       className="bg-red-600 text-white px-2 py-1 rounded-md hover:bg-red-500"

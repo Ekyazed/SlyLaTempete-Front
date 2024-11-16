@@ -27,7 +27,7 @@ export interface Book {
 // Function to get the last 10 added books
 export const getLast10Books = async (): Promise<Book[]> => {
   try {
-    const response = await axiosInstance.get('/books?limit=10&sort_column=title&sort_order=asc');
+    const response = await axiosInstance.get('/books?limit=10&sort_column=publication_date&sort_order=desc');
     return response.data.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {

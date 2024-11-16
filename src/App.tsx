@@ -1,33 +1,50 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import HomePage from './pages/HomePage';
 import BookCollection from './components/BookCollection';
 import AddBookPage from './pages/AddBookForm';
-import { RootState } from './redux/store';
 import EditBook from './pages/EditBookForm';
-
+import { RootState } from './redux/store';
+import { logout } from './redux/slices/userSlice'; // Example action to handle logout
 
 interface PrivateRouteProps {
   element: JSX.Element;
-  isAuthenticated: boolean;
   redirectPath?: string;
 }
 
-// Composant PrivateRoute pour protéger les routes nécessitant une authentification
-const PrivateRoute: React.FC<PrivateRouteProps> = ({ element, isAuthenticated, redirectPath = '/login' }) => {
+// PrivateRoute component for protecting routes
+const PrivateRoute: React.FC<PrivateRouteProps> = ({ element, redirectPath = '/login' }) => {
+  const isAuthenticated = useSelector((state: RootState) => state.user.isLoggedIn);
+
+  // Redirect to login if the user is not authenticated
   return isAuthenticated ? element : <Navigate to={redirectPath} replace />;
 };
 
 const AppRouter: React.FC = () => {
+  const dispatch = useDispatch();
   const isAuthenticated = useSelector((state: RootState) => state.user.isLoggedIn);
+
+  // Handle browser close or tab close event
+  useEffect(() => {
+    const handleUnload = () => {
+      // Optionally perform logout actions or cleanup before the user leaves
+      dispatch(logout()); // Example logout action
+    };
+
+    window.addEventListener('beforeunload', handleUnload);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleUnload);
+    };
+  }, [dispatch]);
 
   return (
     <Router>
       <Routes>
-        {/* Routes publiques */}
+        {/* Public Routes */}
         <Route
           path="/login"
           element={isAuthenticated ? <Navigate to="/home" replace /> : <Login />}
@@ -37,26 +54,25 @@ const AppRouter: React.FC = () => {
           element={isAuthenticated ? <Navigate to="/home" replace /> : <Register />}
         />
 
-        {/* Routes privées */}
+        {/* Private Routes */}
         <Route
           path="/home"
-          element={<PrivateRoute element={<HomePage />} isAuthenticated={isAuthenticated} />}
+          element={<PrivateRoute element={<HomePage />} />}
         />
         <Route
           path="/books"
-          element={<PrivateRoute element={<BookCollection />} isAuthenticated={isAuthenticated} />}
+          element={<PrivateRoute element={<BookCollection />} />}
         />
         <Route
           path="/add-book"
-          element={<PrivateRoute element={<AddBookPage />} isAuthenticated={isAuthenticated} />}
+          element={<PrivateRoute element={<AddBookPage />} />}
         />
-
         <Route
           path="/edit-book/:id"
-          element={<PrivateRoute element={<EditBook />} isAuthenticated={isAuthenticated} />}
+          element={<PrivateRoute element={<EditBook />} />}
         />
 
-        {/* Redirection par défaut */}
+        {/* Default Redirect */}
         <Route path="*" element={<Navigate to="/home" replace />} />
       </Routes>
     </Router>

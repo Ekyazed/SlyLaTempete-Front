@@ -8,7 +8,6 @@ import BookCollection from './components/BookCollection';
 import AddBookPage from './pages/AddBookForm';
 import EditBook from './pages/EditBookForm';
 import { RootState } from './redux/store';
-import { logout } from './redux/slices/userSlice'; // Example action to handle logout
 
 interface PrivateRouteProps {
   element: JSX.Element;
@@ -30,8 +29,7 @@ const AppRouter: React.FC = () => {
   // Handle browser close or tab close event
   useEffect(() => {
     const handleUnload = () => {
-      // Optionally perform logout actions or cleanup before the user leaves
-      dispatch(logout()); // Example logout action
+      
     };
 
     window.addEventListener('beforeunload', handleUnload);

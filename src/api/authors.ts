@@ -1,7 +1,8 @@
 // Author API Calls
 import axios from 'axios';
 
-const API_URL = 'https://backend.librairie.slylatempete.fr'; // Replace with your actual API URL
+// const API_URL = 'https://backend.librairie.slylatempete.fr'; // Replace with your actual API URL
+const API_URL = "http://localhost:8080"
 
 axios.defaults.withCredentials = true;
 

@@ -67,7 +67,7 @@ const DashboardOverview: React.FC = () => {
           )}
         </div>
       </div>
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
         <div className="bg-indigo-500 text-white p-4 rounded-md">
           <p className="text-lg">Total Books</p>
           <p className="text-3xl font-bold">{totalBooks}</p>
@@ -79,10 +79,6 @@ const DashboardOverview: React.FC = () => {
         <div className="bg-indigo-500 text-white p-4 rounded-md">
           <p className="text-lg">Books Read</p>
           <p className="text-3xl font-bold">{booksRead} / {totalBooks}</p>
-        </div>
-        <div className="bg-indigo-500 text-white p-4 rounded-md">
-          <p className="text-lg">Coming Soon</p>
-          <p className="text-3xl font-bold">N/A</p>
         </div>
       </div>
     </div>

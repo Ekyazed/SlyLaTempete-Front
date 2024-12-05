@@ -18,15 +18,12 @@ const statsSlice = createSlice({
   initialState,
   reducers: {
     setTotalBooks(state, action: PayloadAction<number>) {
-      console.log('Updating totalBooks:', action.payload);
       state.totalBooks = action.payload;
     },
     setTotalAuthors(state, action: PayloadAction<number>) {
-      console.log('Updating totalAuthors:', action.payload);
       state.totalAuthors = action.payload;
     },
     setBooksRead(state, action: PayloadAction<number>) {
-      console.log('Updating booksRead:', action.payload);
       state.booksRead = action.payload;
     },
     updateStats(state, action: PayloadAction<Partial<StatsState>>) {

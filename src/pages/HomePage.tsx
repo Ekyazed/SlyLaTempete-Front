@@ -2,7 +2,6 @@ import React from 'react';
 import DashboardOverview from '../components/DashboardOverview';
 import DynamicSearch from '../components/DynamicSearch';
 import BookCollection from '../components/BookCollection';
-import ReadingProgress from '../components/ReadingProgress';
 
 const HomePage: React.FC = () => {
   return (
@@ -10,7 +9,6 @@ const HomePage: React.FC = () => {
       <DashboardOverview />
       <DynamicSearch />
       <BookCollection />
-      <ReadingProgress />
     </div>
   );
 };

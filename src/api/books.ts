@@ -1,7 +1,8 @@
 // Book API Calls
 import axios from 'axios';
 
-const API_URL = 'https://backend.librairie.slylatempete.fr'; // Replace with your actual API URL
+// const API_URL = 'https://backend.librairie.slylatempete.fr'; // Replace with your actual API URL
+  const API_URL = "http://localhost:8080"
 
 axios.defaults.withCredentials = true;
 
@@ -24,15 +25,46 @@ export interface Book {
   is_read: boolean;
 }
 
+interface PaginationResponse {
+  books: Book[];
+  pagination: {
+    total: number;
+    page: number;
+    page_size: number;
+    total_pages: number;
+  };
+}
+
+
 // Function to get the last 10 added books
-export const getLast10Books = async (): Promise<Book[]> => {
+export const getPaginatedBooks = async (
+  page: number,
+  pageSize: number
+): Promise<PaginationResponse> => {
   try {
-    const response = await axiosInstance.get('/books?limit=10&sort_column=publication_date&sort_order=desc');
-    return response.data.data;
+    const response = await axiosInstance.get(`/books`, {
+      params: {
+        page: page || 1,
+        pageSize: pageSize || 10,
+        sort_column: 'publication_date', // Default sorting column
+        sort_order: 'desc',             // Default sorting order
+      },
+    });
+
+    return {
+      books: response.data.data.books,
+      pagination: {
+        total: response.data.data.total,
+        page: response.data.data.page,
+        page_size: response.data.data.page_size,
+        total_pages: response.data.data.total_pages,
+      },
+    };
   } catch (error) {
     if (axios.isAxiosError(error)) {
       throw new Error(error.response?.data.error || 'Failed to fetch books');
     } else {
+      console.log(error)
       throw new Error('An unexpected error occurred');
     }
   }

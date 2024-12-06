@@ -15,6 +15,7 @@ const AddBookPage: React.FC = () => {
   const [authors, setAuthors] = useState<string[]>([]);
   const [authorInput, setAuthorInput] = useState<string>('');
   const [suggestions, setSuggestions] = useState<string[]>([]);
+  const [continueBook, setContinueBook] = useState<boolean>(false);
 
   useEffect(() => {
     if (authorState.length === 0) {
@@ -34,11 +35,13 @@ const AddBookPage: React.FC = () => {
   const formik = useFormik({
     initialValues: {
       title: '',
+      volume: '',
       genre: '',
       publication_date: '',
     },
     validationSchema: Yup.object({
       title: Yup.string().required('Title is required'),
+      volume: Yup.string(),
       genre: Yup.string().required('Genre is required'),
       publication_date: Yup.string().required('Publication Date is required'),
     }),
@@ -46,10 +49,17 @@ const AddBookPage: React.FC = () => {
       setSubmitting(true);
       try {
         const authorsArray = authors.map((name) => ({ id: 0, name }));
-        await addBook({ ...values, authors: authorsArray, is_read: false });
-        resetForm();
-        setAuthors([]);
-        navigate('/home');
+        const concatenatedTitle = values.volume ? `${values.title} ${values.volume}` : values.title;
+        await addBook({ ...values, title: concatenatedTitle, authors: authorsArray, is_read: false });
+
+        if (!continueBook) {
+          resetForm();
+          setAuthors([]);
+          navigate('/home');
+        } else {
+          // Keep form values except publication_date
+          resetForm({ values: { ...values, volume: '', publication_date: '' } });
+        }
       } catch (error) {
         console.error('Failed to add book:', error);
       } finally {
@@ -93,16 +103,29 @@ const AddBookPage: React.FC = () => {
             <label htmlFor="title" className="block text-sm font-medium text-gray-700">
               Title
             </label>
-            <input
-              id="title"
-              name="title"
-              type="text"
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              value={formik.values.title}
-              className="mt-1 p-3 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              autoComplete="off"
-            />
+            <div className="flex items-center">
+              <input
+                id="title"
+                name="title"
+                type="text"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.title}
+                className="mt-1 p-3 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                autoComplete="off"
+              />
+              <input
+                id="volume"
+                name="volume"
+                type="text"
+                placeholder="Vol."
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.volume}
+                className="mt-1 ml-2 p-3 w-20 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                autoComplete="off"
+              />
+            </div>
             {formik.touched.title && formik.errors.title ? (
               <div className="text-red-500 text-sm mt-1">{formik.errors.title}</div>
             ) : null}
@@ -191,6 +214,20 @@ const AddBookPage: React.FC = () => {
             {formik.touched.publication_date && formik.errors.publication_date ? (
               <div className="text-red-500 text-sm mt-1">{formik.errors.publication_date}</div>
             ) : null}
+          </div>
+
+          <div className="mb-6 flex items-center">
+            <input
+              id="continueBook"
+              name="continueBook"
+              type="checkbox"
+              checked={continueBook}
+              onChange={(e) => setContinueBook(e.target.checked)}
+              className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+            />
+            <label htmlFor="continueBook" className="ml-2 block text-sm text-gray-800">
+              Continue on this book
+            </label>
           </div>
 
           <button

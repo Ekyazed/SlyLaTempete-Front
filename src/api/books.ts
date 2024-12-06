@@ -23,7 +23,9 @@ export interface Book {
   genre: string;
   publication_date: string;
   is_read: boolean;
+  type: string; // Added new field
 }
+
 
 interface PaginationResponse {
   books: Book[];
@@ -51,15 +53,26 @@ export const getPaginatedBooks = async (
       },
     });
 
-    return {
-      books: response.data.data.books,
-      pagination: {
-        total: response.data.data.total,
-        page: response.data.data.page,
-        page_size: response.data.data.page_size,
-        total_pages: response.data.data.total_pages,
-      },
-    };
+    if (response.data.data.books == null) {
+      return {
+        books: [],
+        pagination: {
+          total: response.data.data.total,
+          page: response.data.data.page,
+          page_size: response.data.data.page_size,
+          total_pages: response.data.data.total_pages,
+        },
+    }} else {
+      return {
+        books: response.data.data.books,
+        pagination: {
+          total: response.data.data.total,
+          page: response.data.data.page,
+          page_size: response.data.data.page_size,
+          total_pages: response.data.data.total_pages,
+        },
+      }; 
+    }
   } catch (error) {
     if (axios.isAxiosError(error)) {
       throw new Error(error.response?.data.error || 'Failed to fetch books');

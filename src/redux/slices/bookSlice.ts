@@ -14,6 +14,7 @@ interface Book {
   genre: string;
   publication_date: string;
   is_read: boolean;
+  type: string;
 }
 
 // Redux state for books

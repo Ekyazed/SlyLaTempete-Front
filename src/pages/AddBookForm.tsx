@@ -38,12 +38,14 @@ const AddBookPage: React.FC = () => {
       volume: '',
       genre: '',
       publication_date: '',
+      type: '',
     },
     validationSchema: Yup.object({
       title: Yup.string().required('Title is required'),
       volume: Yup.string(),
       genre: Yup.string().required('Genre is required'),
       publication_date: Yup.string().required('Publication Date is required'),
+      type: Yup.string().required('Type is required'),
     }),
     onSubmit: async (values, { setSubmitting, resetForm }) => {
       setSubmitting(true);
@@ -58,7 +60,7 @@ const AddBookPage: React.FC = () => {
           navigate('/home');
         } else {
           // Keep form values except publication_date
-          resetForm({ values: { ...values, volume: '', publication_date: '' } });
+          resetForm({ values: { ...values, volume: '', publication_date: '' }});
         }
       } catch (error) {
         console.error('Failed to add book:', error);
@@ -194,6 +196,25 @@ const AddBookPage: React.FC = () => {
             />
             {formik.touched.genre && formik.errors.genre ? (
               <div className="text-red-500 text-sm mt-1">{formik.errors.genre}</div>
+            ) : null}
+          </div>
+
+          <div className="mb-6">
+            <label htmlFor="type" className="block text-sm font-medium text-gray-700">
+              Type
+            </label>
+            <input
+              id="type"
+              name="type"
+              type="text"
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.type}
+              className="mt-1 p-3 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              autoComplete="off"
+            />
+            {formik.touched.type && formik.errors.type ? (
+              <div className="text-red-500 text-sm mt-1">{formik.errors.type}</div>
             ) : null}
           </div>
 

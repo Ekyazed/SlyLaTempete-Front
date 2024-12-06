@@ -102,15 +102,18 @@ const BookCollection: React.FC = () => {
 
   return (
     <div className="bg-white p-6 rounded-lg shadow-md mb-8 relative">
-      <h2 className="text-2xl font-bold mb-4 inline-block">Your Book Collection</h2>
-      <button
-        onClick={() => navigate('/add-book')}
-        className="absolute top-6 right-6 bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-500"
-      >
-        Add Book
-      </button>
-      <div className="mb-4 flex justify-between items-center">
-        <div>
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4">
+        <h2 className="text-2xl font-bold">Your Book Collection</h2>
+        <button
+          onClick={() => navigate('/add-book')}
+          className="mt-4 sm:mt-0 bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-500"
+        >
+          Add Book
+        </button>
+      </div>
+
+      <div className="mb-4 flex flex-col sm:flex-row justify-between items-center">
+        <div className="mb-2 sm:mb-0">
           <label htmlFor="pageSize" className="mr-2">Items per page:</label>
           <select
             id="pageSize"
@@ -124,59 +127,109 @@ const BookCollection: React.FC = () => {
           </select>
         </div>
       </div>
+
       {loading ? (
         <p>Loading...</p>
       ) : error ? (
         <p>Error: {error}</p>
       ) : books.length > 0 ? (
         <>
-          <table className="w-full text-left">
-            <thead>
-              <tr>
-                <th className="border-b p-2">Title</th>
-                <th className="border-b p-2">Authors</th>
-                <th className="border-b p-2">Genre</th>
-                <th className="border-b p-2">Publication Date</th>
-                <th className="border-b p-2">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {books.map((book: Book) => (
-                <tr key={book.id}>
-                  <td className="border-b p-2">{book.title}</td>
-                  <td className="border-b p-2">
-                    {book.authors.map((author) => (
-                      <div key={author.id}>{author.name}</div>
-                    ))}
-                  </td>
-                  <td className="border-b p-2">{book.genre}</td>
-                  <td className="border-b p-2">{book.publication_date}</td>
-                  <td className="border-b p-2">
-                    <button
-                      onClick={() => handleReadStatusChange(book)}
-                      className={`mr-2 px-2 py-1 rounded-md ${
-                        book.is_read ? 'bg-green-600' : 'bg-gray-600'
-                      } text-white hover:bg-opacity-80`}
-                    >
-                      {book.is_read ? 'Read' : 'Mark as Read'}
-                    </button>
-                    <button
-                      onClick={() => handleEdit(book.id)}
-                      className="mr-2 bg-blue-600 text-white px-2 py-1 rounded-md hover:bg-blue-500"
-                    >
-                      Edit
-                    </button>
-                    <button
-                      onClick={() => handleDelete(book.id)}
-                      className="bg-red-600 text-white px-2 py-1 rounded-md hover:bg-red-500"
-                    >
-                      Delete
-                    </button>
-                  </td>
+          <div className="block sm:hidden">
+            {/* Mobile View */}
+            {books.map((book: Book) => (
+              <div key={book.id} className="bg-gray-100 p-4 mb-4 rounded-lg shadow-sm">
+                <h3 className="font-bold text-lg mb-2">
+                  {book.title.length > 50 ? `${book.title.substring(0, 50)}...` : book.title}
+                </h3>
+                <p className="text-sm mb-1">
+                  <span className="font-semibold">Authors: </span>
+                  {book.authors.map((author) => author.name).join(', ')}
+                </p>
+                <p className="text-sm mb-1">
+                  <span className="font-semibold">Publication Date: </span>
+                  {book.publication_date}
+                </p>
+                <div className="flex flex-col space-y-2 mt-3">
+                  <button
+                    onClick={() => handleReadStatusChange(book)}
+                    className={`w-full px-4 py-2 rounded-md text-xs ${
+                      book.is_read ? 'bg-green-600' : 'bg-gray-600'
+                    } text-white hover:bg-opacity-80`}
+                  >
+                    {book.is_read ? 'Read' : 'Mark as Read'}
+                  </button>
+                  <button
+                    onClick={() => handleEdit(book.id)}
+                    className="w-full bg-blue-600 text-white px-4 py-2 rounded-md text-xs hover:bg-blue-500"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    onClick={() => handleDelete(book.id)}
+                    className="w-full bg-red-600 text-white px-4 py-2 rounded-md text-xs hover:bg-red-500"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="hidden sm:block">
+            {/* Desktop View */}
+            <table className="w-full text-left">
+              <thead>
+                <tr>
+                  <th className="border-b p-2 w-1/2">Title</th>
+                  <th className="border-b p-2 w-1/12">Authors</th>
+                  <th className="border-b p-2 w-1/12">Publication Date</th>
+                  <th className="border-b p-2 w-1/12">Genre</th> {/* Genre Column */}
+                  <th className="border-b p-2 w-1/12">Type</th> {/* Type Column */}
+                  <th className="border-b p-2 w-1/4">Actions</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {books.map((book: Book) => (
+                  <tr key={book.id}>
+                    <td className="border-b p-2">
+                      {book.title.length > 50 ? `${book.title.substring(0, 50)}...` : book.title}
+                    </td>
+                    <td className="border-b p-2">
+                      {book.authors.map((author) => (
+                        <div key={author.id}>{author.name}</div>
+                      ))}
+                    </td>
+                    <td className="border-b p-2">{book.publication_date}</td>
+                    <td className="border-b p-2">{book.genre}</td> {/* Genre Data */}
+                    <td className="border-b p-2">{book.type}</td> {/* Type Data */}
+                    <td className="border-b p-2" style={{ width: '150px', whiteSpace: 'nowrap' }}>
+                      <button
+                        onClick={() => handleReadStatusChange(book)}
+                        className={`mr-1 px-1 py-1 rounded-md text-xs ${
+                          book.is_read ? 'bg-green-600' : 'bg-gray-600'
+                        } text-white hover:bg-opacity-80`}
+                      >
+                        {book.is_read ? 'Read' : 'Mark as Read'}
+                      </button>
+                      <button
+                        onClick={() => handleEdit(book.id)}
+                        className="mr-1 bg-blue-600 text-white px-1 py-1 rounded-md text-xs hover:bg-blue-500"
+                      >
+                        Edit
+                      </button>
+                      <button
+                        onClick={() => handleDelete(book.id)}
+                        className="bg-red-600 text-white px-1 py-1 rounded-md text-xs hover:bg-red-500"
+                      >
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
           <div className="flex justify-between items-center mt-4">
             <button
               onClick={() => changePage(page - 1)}

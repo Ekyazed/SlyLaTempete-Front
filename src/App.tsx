@@ -8,6 +8,7 @@ import BookCollection from './components/BookCollection';
 import AddBookPage from './pages/AddBookForm';
 import EditBook from './pages/EditBookForm';
 import { RootState } from './redux/store';
+import InsightsPage from './pages/Insight';
 
 interface PrivateRouteProps {
   element: JSX.Element;
@@ -69,6 +70,11 @@ const AppRouter: React.FC = () => {
           path="/edit-book/:id"
           element={<PrivateRoute element={<EditBook />} />}
         />
+
+        <Route
+          path="/insight"
+          element={<PrivateRoute element={<InsightsPage />} />}
+          />
 
         {/* Default Redirect */}
         <Route path="*" element={<Navigate to="/home" replace />} />

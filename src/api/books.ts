@@ -83,20 +83,6 @@ export const getPaginatedBooks = async (
   }
 };
 
-// Function to get all books with optional pagination
-export const getAllBooks = async (page: number = 1, limit: number = 10): Promise<Book[]> => {
-  try {
-    const response = await axiosInstance.get(`/books?page=${page}&limit=${limit}`);
-    return response.data;
-  } catch (error) {
-    if (axios.isAxiosError(error)) {
-      throw new Error(error.response?.data.message || 'Failed to fetch books');
-    } else {
-      throw new Error('An unexpected error occurred');
-    }
-  }
-};
-
 export const searchCollection = async (type: string, query: string) => {
   try {
     const response = await axiosInstance.get(`/books/search`, {
